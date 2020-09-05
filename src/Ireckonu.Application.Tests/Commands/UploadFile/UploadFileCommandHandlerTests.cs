@@ -46,7 +46,7 @@ namespace Ireckonu.Application.Tests.Commands.UploadFile
 
             reader
                 .Setup(x => x.ReadAsync())
-                .ReturnsAsync(Enumerable.Empty<string>());
+                .Returns(AsyncEnumerable.Empty<string>());
 
             _fileFactory
                 .Setup(x => x.CreateReader(content))
@@ -66,7 +66,7 @@ namespace Ireckonu.Application.Tests.Commands.UploadFile
             _fileStorage.Verify(x => x.CreateFile(It.IsAny<string>()), Times.Once);
 
             reader.Verify(x => x.ReadAsync(), Times.Once);
-            writer.Verify(x => x.WriteAsync(It.IsAny<IEnumerable<string>>()), Times.Once);
+            writer.Verify(x => x.WriteAsync(It.IsAny<IAsyncEnumerable<string>>()), Times.Once);
         }
     }
 }

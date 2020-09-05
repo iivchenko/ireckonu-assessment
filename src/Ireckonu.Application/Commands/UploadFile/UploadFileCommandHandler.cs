@@ -32,7 +32,7 @@ namespace Ireckonu.Application.Commands.UploadFile
             using (var reader = _fileFactory.CreateReader(command.Content))
             using (var writer = _storage.CreateFile(name))
             {
-                await writer.WriteAsync(await reader.ReadAsync());
+                await writer.WriteAsync(reader.ReadAsync());
             }
 
             _logger.LogInformation($"Finish file '{command.SourceFileName}' upload into storage as '{name}'");

@@ -6,6 +6,6 @@ namespace Ireckonu.Application.Services.FileStorage
 {
     public interface IFileReader : IDisposable
     {
-        Task<IEnumerable<string>> ReadAsync();
+        IAsyncEnumerable<string> ReadAsync();
     }
 }

@@ -6,6 +6,6 @@ namespace Ireckonu.Application.Services.FileStorage
 {
     public interface IFileWriter : IDisposable
     {
-        Task WriteAsync(IEnumerable<string> lines);
+        Task WriteAsync(IAsyncEnumerable<string> lines);
     }
 }

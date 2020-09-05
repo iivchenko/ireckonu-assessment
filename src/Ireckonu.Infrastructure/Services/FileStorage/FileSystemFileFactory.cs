@@ -7,7 +7,7 @@ namespace Ireckonu.Infrastructure.Services.FileStorage
     {
         public IFileReader CreateReader(Stream stream)
         {
-            throw new System.NotImplementedException();
+            return new FileSystemFileReader(stream);
         }
     }
 }

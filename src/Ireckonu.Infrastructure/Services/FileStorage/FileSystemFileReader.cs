@@ -1,19 +1,39 @@
 ﻿using Ireckonu.Application.Services.FileStorage;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Ireckonu.Infrastructure.Services.FileStorage
 {
     public sealed class FileSystemFileReader : IFileReader
     {
-        public void Dispose()
+        private readonly Stream _stream;
+
+        internal FileSystemFileReader(Stream stream)
         {
-            throw new System.NotImplementedException();
+            _stream = stream;
         }
 
-        public Task<IEnumerable<string>> ReadAsync()
+        public void Dispose()
         {
-            throw new System.NotImplementedException();
+            _stream.Dispose();
+        }
+
+        public async IAsyncEnumerable<string> ReadAsync()
+        {
+            using (var reader = new StreamReader(_stream))
+            {
+                while(true)
+                {
+                    var item = await reader.ReadLineAsync();
+
+                    if (item == null)
+                    {
+                        break;
+                    }
+
+                    yield return item;
+                }
+            }
         }
     }
 }

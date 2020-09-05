@@ -1,5 +1,8 @@
 using AutoMapper;
+using EasyNetQ;
+using Ireckonu.Application.Services.Events;
 using Ireckonu.Application.Services.FileStorage;
+using Ireckonu.Infrastructure.Services;
 using Ireckonu.Infrastructure.Services.FileStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +28,8 @@ namespace Ireckonu.FileUploadHost
         {
             services.AddScoped<IFileFactory, FileSystemFileFactory>();
             services.AddScoped<IFileStorage, FileSystemFileStorage>(x => new FileSystemFileStorage(Configuration.GetValue<string>("Storage:Temporary")));
+
+            services.AddScoped<IEventService>(x => new RabbitMqEventService(RabbitHutch.CreateBus(Configuration.GetConnectionString("RabbitMq"))));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());

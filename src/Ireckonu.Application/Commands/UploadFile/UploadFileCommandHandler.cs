@@ -4,6 +4,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Ireckonu.Application.Services.Events;
+using Ireckonu.Application.Events;
 
 namespace Ireckonu.Application.Commands.UploadFile
 {
@@ -11,15 +13,18 @@ namespace Ireckonu.Application.Commands.UploadFile
     {
         private readonly IFileStorage _storage;
         private readonly IFileFactory _fileFactory;
+        private readonly IEventService _eventService;
         private readonly ILogger _logger;
 
         public UploadFileCommandHandler(
             IFileStorage storage,
             IFileFactory fileFactory,
+            IEventService eventService,
             ILogger<UploadFileCommandHandler> logger)
         {
             _storage = storage;
             _fileFactory = fileFactory;
+            _eventService = eventService;
             _logger = logger;
         }
 
@@ -34,6 +39,8 @@ namespace Ireckonu.Application.Commands.UploadFile
             {
                 await writer.WriteAsync(reader.ReadAsync());
             }
+
+            await _eventService.PublishAsync(new TemporaryFileUploadedEvent(name));
 
             _logger.LogInformation($"Finish file '{command.SourceFileName}' upload into storage as '{name}'");
 

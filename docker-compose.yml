@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+
+  message.broker: 
+    image: rabbitmq:3-management
+
+  sql.db:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
+  ireckonu.fileuploadhost:
+    image: ${DOCKER_REGISTRY-}ireckonufileuploadhost
+    build:
+      context: .
+      dockerfile: src/Ireckonu.FileUploadHost/Dockerfile
+    depends_on:
+      - sql.db
+      - message.broker
+
+  ireckonu.fileprocessinghost:
+    image: ${DOCKER_REGISTRY-}ireckonufileprocessinghost
+    build:
+      context: .
+      dockerfile: src/Ireckonu.FileProcessingHost/Dockerfile
+    depends_on:
+      - sql.db
+      - message.broker

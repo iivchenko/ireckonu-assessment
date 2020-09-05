@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  message.broker: 
+     ports:
+        - "15672:15672"
+
+  sql.db:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433" 
+
+  ireckonu.fileuploadhost:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__MsSqlServer=Server=sql.db;Database=products;User Id=sa;Password=Pass@word
+      - ConnectionStrings__RabbitMq=host=message.broker
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  ireckonu.fileprocessinghost:
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

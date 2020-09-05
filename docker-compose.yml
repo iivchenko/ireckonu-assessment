@@ -1,5 +1,9 @@
 version: '3.4'
 
+volumes:
+  tempory-file-storage:
+  permanent-file-storage:
+
 services:
 
   message.broker: 
@@ -13,6 +17,10 @@ services:
     build:
       context: .
       dockerfile: src/Ireckonu.FileUploadHost/Dockerfile
+    environment:
+      - Storage__Temporary=storage/temporary
+    volumes:
+      - tempory-file-storage:/app/storage/temporary:rw
     depends_on:
       - sql.db
       - message.broker
@@ -22,6 +30,12 @@ services:
     build:
       context: .
       dockerfile: src/Ireckonu.FileProcessingHost/Dockerfile
+    environment:
+      - Storage__Temporary=storage/temporary
+      - Storage__Permanent=storage/permanent
+    volumes:
+      - tempory-file-storage:/app/storage/temporary:rw
+      - permanent-file-storage:/app/storage/permanent:rw
     depends_on:
       - sql.db
       - message.broker

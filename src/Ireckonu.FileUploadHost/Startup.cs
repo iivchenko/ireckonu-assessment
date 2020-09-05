@@ -24,7 +24,7 @@ namespace Ireckonu.FileUploadHost
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IFileFactory, FileSystemFileFactory>();
-            services.AddScoped<IFileStorage, FileSystemFileStorage>();
+            services.AddScoped<IFileStorage, FileSystemFileStorage>(x => new FileSystemFileStorage(Configuration.GetValue<string>("Storage:Temporary")));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());

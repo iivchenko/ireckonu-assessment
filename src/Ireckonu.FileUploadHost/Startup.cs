@@ -1,9 +1,14 @@
+using AutoMapper;
+using Ireckonu.Application.Services.FileStorage;
+using Ireckonu.Infrastructure.Services.FileStorage;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Ireckonu.FileUploadHost
 {
@@ -18,6 +23,12 @@ namespace Ireckonu.FileUploadHost
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IFileFactory, FileSystemFileFactory>();
+            services.AddScoped<IFileStorage, FileSystemFileStorage>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

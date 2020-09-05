@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Ireckonu.Application.Commands.UploadFile;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Ireckonu.FileUploadHost.Files
@@ -9,10 +11,23 @@ namespace Ireckonu.FileUploadHost.Files
     [ApiController]
     public sealed class FilesController : ControllerBase
     {
-        [HttpPost]
-        public async Task UploadFile(IFormFile file)
+        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
+
+        public FilesController(IMapper mapper, IMediator mediator)
         {
-            throw new NotImplementedException();
+            _mapper = mapper;
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        public async Task<string> UploadFile(IFormFile file)
+        {
+            var command = _mapper.Map<UploadFileCommand>(file);
+
+            var response = await _mediator.Send(command);
+
+            return response.TargetFileName;
         }
     }
 }

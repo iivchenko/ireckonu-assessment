@@ -2,7 +2,7 @@
 using Ireckonu.Application.Services.Events;
 using System.Threading.Tasks;
 
-namespace Ireckonu.Infrastructure.Services
+namespace Ireckonu.Infrastructure.Services.Events
 {
     public sealed class RabbitMqEventService : IEventService
     {

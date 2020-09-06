@@ -16,8 +16,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionStrings__MsSqlServer=Server=sql.db;Database=products;User Id=sa;Password=Pass@word
       - ConnectionStrings__RabbitMq=host=message.broker
+      - ConnectionStrings__MsSqlServer=Server=sql.db;Database=products;User Id=sa;Password=Pass@word
+      - Storage__Temporary=storage/temporary
     ports:
       - "80"
       - "443"
@@ -31,3 +32,5 @@ services:
     environment:
       - ConnectionStrings__MsSqlServer=Server=sql.db;Database=products;User Id=sa;Password=Pass@word
       - ConnectionStrings__RabbitMq=host=message.broker
+      - Storage__Temporary=storage/temporary
+      - Storage__Permanent=storage/permanent

@@ -1,17 +1,31 @@
 using AutoMapper;
 using EasyNetQ;
+using Ireckonu.Application.Domain.ArticleAggregate;
+using Ireckonu.Application.Domain.AudienceAggregate;
+using Ireckonu.Application.Domain.Common;
+using Ireckonu.Application.Domain.CurrencyAggregate;
+using Ireckonu.Application.Domain.ProductAggregate;
+using Ireckonu.Application.Services.Converters;
 using Ireckonu.Application.Services.Events;
 using Ireckonu.Application.Services.FileStorage;
-using Ireckonu.Infrastructure.Services;
+using Ireckonu.Infrastructure.Domain;
+using Ireckonu.Infrastructure.Domain.ArticleAggregate;
+using Ireckonu.Infrastructure.Domain.AudienceAggregate;
+using Ireckonu.Infrastructure.Domain.CurrencyAggregate;
+using Ireckonu.Infrastructure.Domain.ProductAggregate;
+using Ireckonu.Infrastructure.Services.Converters;
+using Ireckonu.Infrastructure.Services.Events;
 using Ireckonu.Infrastructure.Services.FileStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 
 namespace Ireckonu.FileUploadHost
 {
@@ -30,6 +44,22 @@ namespace Ireckonu.FileUploadHost
             services.AddScoped<IFileStorage, FileSystemFileStorage>(x => new FileSystemFileStorage(Configuration.GetValue<string>("Storage:Temporary")));
 
             services.AddScoped<IEventService>(x => new RabbitMqEventService(RabbitHutch.CreateBus(Configuration.GetConnectionString("RabbitMq"))));
+
+            services.AddScoped<IConverter<IFileReader, IAsyncEnumerable<Product>>, CvsToProductConverter>();
+
+            services.AddScoped<IRepository<Product, Guid>, EfProductRepository>();
+            services.AddScoped<IRepository<Article, Guid>, EfArticleRepository>();
+            services.AddScoped<IRepository<Audience, Guid>, EfAudienceRepository>();
+            services.AddScoped<IRepository<Currency, Guid>, EfCurrencyRepository>();
+
+            services
+                .AddDbContext<IreckonuContext>(
+                    options =>
+                    {
+                        options
+                            .UseSqlServer(
+                                Configuration.GetConnectionString("MsSqlServer"));
+                    });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());

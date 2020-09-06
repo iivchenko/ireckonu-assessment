@@ -17,8 +17,6 @@ services:
     build:
       context: .
       dockerfile: src/Ireckonu.FileUploadHost/Dockerfile
-    environment:
-      - Storage__Temporary=storage/temporary
     volumes:
       - tempory-file-storage:/app/storage/temporary:rw
     depends_on:
@@ -30,9 +28,6 @@ services:
     build:
       context: .
       dockerfile: src/Ireckonu.FileProcessingHost/Dockerfile
-    environment:
-      - Storage__Temporary=storage/temporary
-      - Storage__Permanent=storage/permanent
     volumes:
       - tempory-file-storage:/app/storage/temporary:rw
       - permanent-file-storage:/app/storage/permanent:rw

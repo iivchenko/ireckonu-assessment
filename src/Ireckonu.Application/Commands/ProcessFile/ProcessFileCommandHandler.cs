@@ -49,11 +49,19 @@ namespace Ireckonu.Application.Commands.ProcessFile
                     }
                     else
                     {
-                        item.Id = existing.Id;
+                        existing.ArticleId = item.ArticleId;
+                        existing.AudienceId = item.AudienceId;
+                        existing.Color = item.Color;
+                        existing.DeliveryPeriod = item.DeliveryPeriod;
+                        existing.Description = item.Description;
+                        existing.DiscountPrice = item.DiscountPrice;
+                        existing.Key = item.Key;
+                        existing.Price = item.Price;
+                        existing.Size = item.Size;
 
-                        await _productRepoitory.UpdateAsync(item);
+                        await _productRepoitory.UpdateAsync(existing);
 
-                        _logger.LogTrace($"Exiting product with id ('{item.Id}') updated.");
+                        _logger.LogTrace($"Exiting product with id ('{existing.Id}') updated.");
                     }
                 }
             }

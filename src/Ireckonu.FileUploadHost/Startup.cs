@@ -41,11 +41,13 @@ namespace Ireckonu.FileUploadHost
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IFileFactory, FileSystemFileFactory>();
-            services.AddScoped<IFileStorage, FileSystemFileStorage>(x => new FileSystemFileStorage(Configuration.GetValue<string>("Storage:Temporary")));
+            services.AddScoped<ITemporaryStorage, TemporaryFileSystemFileStorage>(x => new TemporaryFileSystemFileStorage(Configuration.GetValue<string>("Storage:Temporary")));
+            services.AddScoped<IMainStorage, MainFileSystemFileStorage>(x => new MainFileSystemFileStorage(Configuration.GetValue<string>("Storage:Permanent")));
 
             services.AddScoped<IEventService>(x => new RabbitMqEventService(RabbitHutch.CreateBus(Configuration.GetConnectionString("RabbitMq"))));
 
             services.AddScoped<IConverter<IFileReader, IAsyncEnumerable<Product>>, CvsToProductConverter>();
+            services.AddScoped<IConverter<Product, IAsyncEnumerable<string>>, ProductToJsonConverter>();
 
             services.AddScoped<IRepository<Product, Guid>, EfProductRepository>();
             services.AddScoped<IRepository<Article, Guid>, EfArticleRepository>();

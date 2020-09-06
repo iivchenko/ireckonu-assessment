@@ -41,9 +41,11 @@ namespace Ireckonu.FileProcessingHost
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddScoped<IFileStorage, FileSystemFileStorage>(x => new FileSystemFileStorage(hostContext.Configuration.GetValue<string>("Storage:Temporary")));
+                    services.AddScoped<ITemporaryStorage, TemporaryFileSystemFileStorage>(x => new TemporaryFileSystemFileStorage(hostContext.Configuration.GetValue<string>("Storage:Temporary")));
+                    services.AddScoped<IMainStorage, MainFileSystemFileStorage>(x => new MainFileSystemFileStorage(hostContext.Configuration.GetValue<string>("Storage:Permanent")));
 
                     services.AddScoped<IConverter<IFileReader, IAsyncEnumerable<Product>>, CvsToProductConverter>();
+                    services.AddScoped<IConverter<Product, IAsyncEnumerable<string>>, ProductToJsonConverter>();
 
                     services.AddScoped<IRepository<Product, Guid>, EfProductRepository>();
                     services.AddScoped<IRepository<Article, Guid>, EfArticleRepository>();

@@ -11,13 +11,13 @@ namespace Ireckonu.Application.Commands.UploadFile
 {
     public sealed class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, UploadFileCommandResponse>
     {
-        private readonly IFileStorage _storage;
+        private readonly ITemporaryStorage _storage;
         private readonly IFileFactory _fileFactory;
         private readonly IEventService _eventService;
         private readonly ILogger _logger;
 
         public UploadFileCommandHandler(
-            IFileStorage storage,
+            ITemporaryStorage storage,
             IFileFactory fileFactory,
             IEventService eventService,
             ILogger<UploadFileCommandHandler> logger)

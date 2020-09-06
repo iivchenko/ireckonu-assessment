@@ -18,7 +18,7 @@ namespace Ireckonu.Application.Tests.Commands.UploadFile
     {
         private UploadFileCommandHandler _handler;
 
-        private Mock<IFileStorage> _fileStorage;
+        private Mock<ITemporaryStorage> _fileStorage;
         private Mock<IFileFactory> _fileFactory;
         private Mock<IEventService> _eventService;
         private Mock<ILogger<UploadFileCommandHandler>> _logger;
@@ -26,7 +26,7 @@ namespace Ireckonu.Application.Tests.Commands.UploadFile
         [SetUp]
         public void Setup()
         {
-            _fileStorage = new Mock<IFileStorage>();
+            _fileStorage = new Mock<ITemporaryStorage>();
             _fileFactory = new Mock<IFileFactory>();
             _eventService = new Mock<IEventService>();
             _logger = new Mock<ILogger<UploadFileCommandHandler>>();

@@ -14,19 +14,25 @@ namespace Ireckonu.Application.Commands.ProcessFile
 {
     public sealed class ProcessFileCommandHandler : IRequestHandler<ProcessFileCommand, Unit>
     {
-        private readonly IFileStorage _temporaryStorage;
-        private readonly IConverter<IFileReader, IAsyncEnumerable<Product>> _converter;
+        private readonly ITemporaryStorage _temporaryStorage;
+        private readonly IMainStorage _mainStorage;
+        private readonly IConverter<IFileReader, IAsyncEnumerable<Product>> _fileToProductConverter;
+        private readonly IConverter<Product, IAsyncEnumerable<string>> _productTofileConverter;
         private readonly IRepository<Product, Guid> _productRepoitory;
         private readonly ILogger<ProcessFileCommandHandler> _logger;
 
         public ProcessFileCommandHandler(
-            IFileStorage temporaryStorage,
+            ITemporaryStorage temporaryStorage,
+            IMainStorage mainStorage,
             IConverter<IFileReader, IAsyncEnumerable<Product>> fileToProductConverter,
+            IConverter<Product, IAsyncEnumerable<string>> productTofileConverter,
             IRepository<Product, Guid> productRepoitory,
             ILogger<ProcessFileCommandHandler> logger)
         {
             _temporaryStorage = temporaryStorage;
-            _converter = fileToProductConverter;
+            _mainStorage = mainStorage;
+            _fileToProductConverter = fileToProductConverter;
+            _productTofileConverter = productTofileConverter;
             _productRepoitory = productRepoitory;
             _logger = logger;
         }
@@ -35,7 +41,7 @@ namespace Ireckonu.Application.Commands.ProcessFile
         {
             using (var reader = _temporaryStorage.OpenForRead(command.TemporaryFileName))
             {
-                await foreach(var item in _converter.Convert(reader))
+                await foreach(var item in _fileToProductConverter.Convert(reader))
                 {
                     var existing = (await _productRepoitory.FindAsync(x => x.Key == item.Key)).FirstOrDefault();
 
@@ -44,6 +50,12 @@ namespace Ireckonu.Application.Commands.ProcessFile
                         item.Id = Guid.NewGuid();
 
                         await _productRepoitory.CreateAsync(item);
+
+                        var file = $"{item.Id}-{DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss")}";
+                        using (var writer = _mainStorage.CreateFile(file))
+                        {
+                            await writer.WriteAsync(_productTofileConverter.Convert(item));
+                        }
 
                         _logger.LogTrace($"New product with id ('{item.Id}') created.");
                     }
@@ -60,6 +72,12 @@ namespace Ireckonu.Application.Commands.ProcessFile
                         existing.Size = item.Size;
 
                         await _productRepoitory.UpdateAsync(existing);
+
+                        var file = $"{existing.Id}-{DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss")}";
+                        using (var writer = _mainStorage.CreateFile(file))
+                        {
+                            await writer.WriteAsync(_productTofileConverter.Convert(existing));
+                        }
 
                         _logger.LogTrace($"Exiting product with id ('{existing.Id}') updated.");
                     }

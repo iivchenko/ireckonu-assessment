@@ -28,3 +28,6 @@ services:
   ireckonu.fileprocessinghost:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    environment:
+      - ConnectionStrings__MsSqlServer=Server=sql.db;Database=products;User Id=sa;Password=Pass@word
+      - ConnectionStrings__RabbitMq=host=message.broker

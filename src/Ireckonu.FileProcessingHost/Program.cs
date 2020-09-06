@@ -32,13 +32,7 @@ namespace Ireckonu.FileProcessingHost
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var serviceScope = host.Services.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<IreckonuContext>();
-                context.Database.EnsureCreated();
-
-                context.SaveChanges();
-            }
+            SeedDb(host);
 
             host.Run();
         }
@@ -71,5 +65,37 @@ namespace Ireckonu.FileProcessingHost
                     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
                     services.AddMediatR(typeof(ProcessFileCommand).GetTypeInfo().Assembly);
                 });
+
+        private static void SeedDb(IHost host)
+        {
+            using (var serviceScope = host.Services.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<IreckonuContext>();
+                if (context.Database.EnsureCreated())
+                {
+                    context.Articles.Add(new Article { Code = "2", Name = "Broek" });
+                    context.Articles.Add(new Article { Code = "3", Name = "Kniebroek Jorge" });
+                    context.Articles.Add(new Article { Code = "4", Name = "Jeans" });
+                    context.Articles.Add(new Article { Code = "5", Name = "Jeans Willy" });
+                    context.Articles.Add(new Article { Code = "6", Name = "Kniebroek Maria" });
+                    context.Articles.Add(new Article { Code = "7", Name = "Top Wilma" });
+                    context.Articles.Add(new Article { Code = "8", Name = "Top Annie" });
+                    context.Articles.Add(new Article { Code = "9", Name = "Top Bill" });
+                    context.Articles.Add(new Article { Code = "12", Name = "Steve Irwin" });
+                    context.Articles.Add(new Article { Code = "15", Name = "Jeans Willy Boys" });
+                    context.Articles.Add(new Article { Code = "0822801A", Name = "Short Billy & Bobble" });
+                    context.Articles.Add(new Article { Code = "21", Name = "Jacket" });
+                    context.Articles.Add(new Article { Code = "23", Name = "Test" });
+
+                    context.Audiences.Add(new Audience { Name = "baby" });
+                    context.Audiences.Add(new Audience { Name = "boy" });
+                    context.Audiences.Add(new Audience { Name = "NOINDEX" });
+
+                    context.Currencies.Add(new Currency { Name = "EUR" });
+
+                    context.SaveChanges();
+                }                
+            }
+        }
     }
 }

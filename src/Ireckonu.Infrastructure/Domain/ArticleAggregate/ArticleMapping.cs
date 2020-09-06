@@ -15,7 +15,8 @@ namespace Ireckonu.Infrastructure.Domain.ArticleAggregate
                 .HasKey(o => o.Id);
 
             builder
-              .Property(o => o.Code);
+              .Property(o => o.Code)
+              .HasMaxLength(25);
 
             builder
                 .Property(o => o.Name)

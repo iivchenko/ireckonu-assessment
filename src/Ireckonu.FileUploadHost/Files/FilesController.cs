@@ -21,6 +21,8 @@ namespace Ireckonu.FileUploadHost.Files
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
+        [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         public async Task<string> UploadFile(IFormFile file)
         {
             var command = _mapper.Map<UploadFileCommand>(file);

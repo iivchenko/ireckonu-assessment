@@ -40,7 +40,6 @@ namespace Ireckonu.FileUploadHost
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IFileFactory, FileSystemFileFactory>();
             services.AddScoped<ITemporaryStorage, TemporaryFileSystemFileStorage>(x => new TemporaryFileSystemFileStorage(Configuration.GetValue<string>("Storage:Temporary")));
             services.AddScoped<IMainStorage, MainFileSystemFileStorage>(x => new MainFileSystemFileStorage(Configuration.GetValue<string>("Storage:Permanent")));
 

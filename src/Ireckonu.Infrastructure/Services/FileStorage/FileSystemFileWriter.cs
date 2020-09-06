@@ -29,5 +29,10 @@ namespace Ireckonu.Infrastructure.Services.FileStorage
                 }
             }
         }
+
+        public Task WriteAsync(Stream source)
+        {
+            return source.CopyToAsync(_stream);
+        }
     }
 }

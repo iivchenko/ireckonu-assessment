@@ -25,7 +25,7 @@ namespace Ireckonu.Infrastructure.Services.FileStorage
             {
                 await foreach(var line in lines)
                 {
-                    await writer.WriteAsync(line);
+                    await writer.WriteLineAsync(line);
                 }
             }
         }

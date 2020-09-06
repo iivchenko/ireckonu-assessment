@@ -22,12 +22,12 @@ namespace Ireckonu.Infrastructure.Domain.ProductAggregate
             builder
                 .HasOne<Article>()
                 .WithMany()
-                .HasForeignKey(p => p.Id);
+                .HasForeignKey(p => p.ArticleId);
 
             builder
                 .HasOne<Audience>()
                 .WithMany()
-                .HasForeignKey(p => p.Id);
+                .HasForeignKey(p => p.AudienceId);
 
             builder
               .Property(o => o.Description)

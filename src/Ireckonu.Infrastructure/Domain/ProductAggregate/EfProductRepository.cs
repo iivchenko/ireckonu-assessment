@@ -1,7 +1,9 @@
 ﻿using Ireckonu.Application.Domain.Common;
 using Ireckonu.Application.Domain.ProductAggregate;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -9,19 +11,29 @@ namespace Ireckonu.Infrastructure.Domain.ProductAggregate
 {
     public sealed class EfProductRepository : IRepository<Product, Guid>
     {
-        public Task CreateAsync(Product aggregate)
+        private readonly IreckonuContext _context;
+
+        public EfProductRepository(IreckonuContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<IEnumerable<Product>> FindAsync(Expression<Func<Product, bool>> predicate)
+        public async Task CreateAsync(Product product)
         {
-            throw new NotImplementedException();
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(Product aggregate)
+        public async Task<IEnumerable<Product>> FindAsync(Expression<Func<Product, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _context.Products.Where(predicate).ToListAsync();
+        }
+
+        public async Task UpdateAsync(Product product)
+        {
+            _context.Entry(product).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

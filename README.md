@@ -1,6 +1,6 @@
 # Ireckonu Assessment
-Ireckonu Assessment is an implementation of .NET Software Engineer Technical Assignment task. [html](docs/assessment.md)
-**The assessmetn is not that obvious** so additional definitions are **[here](docs/assessment-definition.md)**
+Ireckonu Assessment is an implementation of .NET Software Engineer Technical Assignment task. [Assessment](docs/assessment.md)
+**The assessment is not that obvious** so additional definitions are **[here](docs/assessment-definition.md)**
 
 ## High level design 
 ![High level design](docs/high-level-design-v0.1.png)
@@ -10,16 +10,11 @@ Ireckonu Assessment is an implementation of .NET Software Engineer Technical Ass
 * docker-compose
 * .NET Core SDK 3.1
 * PowerShell
-
-## How to run application without Visual Studio
- * Just run **_start.bat** script
- * Grab url for **questionnairehost** container and open in the browser
- * Enjoy!
  
 ## Tech Stack
  * [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1)
  * [Docker](https://www.docker.com/)
- * [Cake Build](https://cakebuild.net/)
+ * [Swagger](https://swagger.io/)
  * [NUnit](https://nunit.org/)
  * [MediatR](https://github.com/jbogard/MediatR)
  * [AutoMapper](https://automapper.org/)
@@ -34,6 +29,10 @@ Ireckonu Assessment is an implementation of .NET Software Engineer Technical Ass
  * TDD
 
 ## Ideas
+ * Add more Unit Tests
+ * Add Auto Tests
+ * Split DB write and json file creation command
+ * Make input and output file formats configurable and auto detectible
 
 # License
 
